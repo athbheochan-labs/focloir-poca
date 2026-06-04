@@ -1,0 +1,9 @@
+{
+  "name": "focloir-poca",
+  "private": true,
+  "workspaces": ["apps/*", "packages/*"],
+  "scripts": {
+    "dev:web": "npm run dev --workspace=apps/web",
+    "dev:proxy": "npm run dev --workspace=apps/proxy"
+  }
+}
