@@ -7,12 +7,19 @@ import axios from 'axios';
 import * as cheerio from 'cheerio';
 import type { CheerioAPI } from 'cheerio';
 import type { FocloirEntry, FocloirSense, FocloirTranslation } from './focloir.types';
+import { CacheService } from '../cache/cache.service';
 
 const BASE_URL = 'https://www.focloir.ie';
 
 @Injectable()
 export class FocloirService {
+  constructor(private readonly cache: CacheService) {}
+
   async scrape(word: string): Promise<FocloirEntry> {
+    const cacheKey = `focloir:${word}`;
+    const cached = await this.cache.get<FocloirEntry>(cacheKey);
+    if (cached) return cached;
+
     const url = `${BASE_URL}/en/dictionary/ei/${encodeURIComponent(word)}`;
 
     let html: string;
@@ -50,7 +57,9 @@ export class FocloirService {
       );
     }
 
-    return this.parse(html, word);
+    const result = this.parse(html, word);
+    await this.cache.set(cacheKey, result);
+    return result;
   }
 
   private parse(html: string, word: string): FocloirEntry {

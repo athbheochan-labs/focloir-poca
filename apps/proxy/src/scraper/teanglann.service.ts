@@ -12,6 +12,7 @@ import type {
   Example,
   CompoundWord,
 } from './teanglann.types';
+import { CacheService } from '../cache/cache.service';
 
 const BASE_URL = 'https://www.teanglann.ie';
 
@@ -19,7 +20,13 @@ type CheerioSel = ReturnType<ReturnType<typeof cheerio.load>>;
 
 @Injectable()
 export class TeanglannService {
+  constructor(private readonly cache: CacheService) {}
+
   async scrape(word: string): Promise<TeanglannEntry> {
+    const cacheKey = `teanglann:${word}`;
+    const cached = await this.cache.get<TeanglannEntry>(cacheKey);
+    if (cached) return cached;
+
     const url = `${BASE_URL}/en/fgb/${encodeURIComponent(word)}`;
 
     let html: string;
@@ -52,7 +59,9 @@ export class TeanglannService {
       );
     }
 
-    return this.parse(html, word);
+    const result = this.parse(html, word);
+    await this.cache.set(cacheKey, result);
+    return result;
   }
 
   private parse(html: string, word: string): TeanglannEntry {
