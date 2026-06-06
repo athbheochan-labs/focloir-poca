@@ -152,6 +152,9 @@ export class TeanglannService {
     let parenDepth = 0;
     let inflectionDone = false;
     let passedTitle = false;
+    // Some entries (e.g. "scoil") emit a .trans before the first sense number —
+    // a general gloss rather than a sense. Save it and apply to sense 1.
+    let preludeDefinition = '';
 
     entry.contents().each((_, node) => {
       if (node.type === 'text') {
@@ -176,6 +179,14 @@ export class TeanglannService {
 
       if (!passedTitle || !inflectionDone) return;
 
+      // Category label (e.g. "Prov", "Hist", "Toil") — use as definition fallback
+      if (el.hasClass('c') && currentSense && !currentSense.definition) {
+        const tip = el.find('span.fgb.tip').first();
+        const label = tip.attr('title') || tip.text().trim();
+        if (label) currentSense.definition = label;
+        return;
+      }
+
       // Skip grammar/layout/cross-reference spans
       if (
         el.hasClass('g') || el.hasClass('p') || el.hasClass('a') ||
@@ -189,21 +200,32 @@ export class TeanglannService {
         const text = el.text().trim();
         const match = text.match(/^(\d+)\.\s*$/);
         if (match) {
-          currentSense = { number: parseInt(match[1], 10), definition: '', examples: [] };
+          const num = parseInt(match[1], 10);
+          // Carry the prelude definition into the first numbered sense
+          const definition = num === 1 && preludeDefinition ? preludeDefinition : '';
+          preludeDefinition = '';
+          currentSense = { number: num, definition, examples: [] };
           senses.push(currentSense);
           return;
         }
       }
 
-      // Translation → definition
+      // Translation → definition (wrapped in .trans)
       if (el.hasClass('trans')) {
+        const text = el.find('.r').first().text().trim();
         if (!currentSense) {
-          currentSense = { number: 1, definition: '', examples: [] };
-          senses.push(currentSense);
+          preludeDefinition = preludeDefinition || text;
+        } else if (!currentSense.definition) {
+          currentSense.definition = text;
         }
-        if (!currentSense.definition) {
-          currentSense.definition = el.find('.r').first().text().trim();
-        }
+        return;
+      }
+
+      // Bare .r span — definition without a .trans wrapper (e.g. lámh sense 2,
+      // scoil sense 2: the contextual gloss follows the sense number directly)
+      if (el.hasClass('r') && currentSense && !currentSense.definition) {
+        const text = el.text().trim();
+        if (text) currentSense.definition = text;
         return;
       }
 
@@ -225,12 +247,24 @@ export class TeanglannService {
         }
 
         if (!currentSense) {
-          currentSense = { number: 1, definition: '', examples: [] };
+          // Carry any prelude definition (e.g. "Boat." for bád) into the implicit sense
+          currentSense = { number: 1, definition: preludeDefinition, examples: [] };
+          preludeDefinition = '';
           senses.push(currentSense);
         }
         if (irish || english) currentSense.examples.push({ irish, english });
       }
     });
+
+    // Entries with no sense numbers (e.g. "bád"): the prelude .trans is the only definition
+    if (senses.length === 0 && preludeDefinition) {
+      const examples: Example[] = [];
+      entry.find('span.fgb.example').each((_, el) => {
+        const ex = this.extractExample($(el) as CheerioSel);
+        if (ex) examples.push(ex);
+      });
+      senses.push({ number: 1, definition: preludeDefinition, examples });
+    }
 
     return senses;
   }
