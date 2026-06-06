@@ -77,16 +77,20 @@ export class FocloirService {
         .trim();
 
       // Each sense is either .fwksencnt (first) or .extraspace (subsequent)
+      let autoNum = 0;
       posBlk.find('.fwksencnt, .extraspace').each((_, senseEl) => {
         const sense = $(senseEl);
-        const number = parseInt(sense.find('> .sensenum').first().text().trim(), 10);
+        const rawNum = parseInt(sense.find('> .sensenum').first().text().trim(), 10);
+        // Some senses (e.g. "fada") have no sensenum — auto-assign
+        autoNum = isNaN(rawNum) ? autoNum + 1 : rawNum;
         const labels = this.extractLabels($, sense);
         const meaning = sense.find('> .edmeaning').first().text().trim();
         const translations = this.extractTranslations($, sense);
 
-        if (!isNaN(number)) {
-          senses.push({ number, partOfSpeech, labels, meaning, translations });
-        }
+        // Skip phrase/phrasal-verb blocks that have neither a meaning nor translations
+        if (!meaning && !translations.length && isNaN(rawNum)) return;
+
+        senses.push({ number: autoNum, partOfSpeech, labels, meaning, translations });
       });
     });
 
@@ -116,7 +120,8 @@ export class FocloirService {
   ): FocloirTranslation[] {
     const translations: FocloirTranslation[] = [];
 
-    senseEl.find('> .trcnt > .trgp').each((_, trgpEl) => {
+    // .trcnt may be a direct child or nested inside .fwkstrcnt (verb entries)
+    senseEl.find('.trcnt > .trgp').each((_, trgpEl) => {
       const trgp = $(trgpEl);
       const irish = trgp.find('> .tr').first().text().trim();
       const grammar = trgp.find('> .trpos').first().attr('code') ?? null;
