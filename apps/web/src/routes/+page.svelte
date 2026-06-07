@@ -1,6 +1,7 @@
 <script lang="ts">
   import SearchBar from '$lib/components/SearchBar.svelte';
   import ResultsList from '$lib/components/ResultsList.svelte';
+  import DefinitionView from '$lib/components/DefinitionView.svelte';
   import { activeEntry } from '$lib/stores/search';
 </script>
 
@@ -30,23 +31,19 @@
       </div>
     </aside>
 
-    <!-- Right panel: word detail (next ticket) -->
-    <main class="flex min-h-0 flex-1 flex-col items-center justify-center bg-background">
+    <!-- Right panel: word detail -->
+    <main class="flex min-h-0 flex-1 flex-col bg-background">
       {#if !$activeEntry}
-        <p class="font-serif text-8xl italic font-light text-muted-foreground/25 select-none">
-          focal
-        </p>
-        <p class="mt-4 text-sm text-muted-foreground">
-          Clóscríobh focal le cuardach a dhéanamh.
-        </p>
+        <div class="flex flex-1 flex-col items-center justify-center">
+          <p class="select-none font-serif text-8xl font-light italic text-muted-foreground/20">
+            focal
+          </p>
+          <p class="mt-4 text-sm text-muted-foreground">
+            Clóscríobh focal le cuardach a dhéanamh.
+          </p>
+        </div>
       {:else}
-        <!-- WordDetail component goes here (ticket #10) -->
-        <p class="text-sm text-muted-foreground">
-          <span class="font-serif italic text-foreground">
-            {$activeEntry.teanglann?.headword ?? $activeEntry.focloir?.headword}
-          </span>
-          — detail view coming in next ticket.
-        </p>
+        <DefinitionView />
       {/if}
     </main>
 
