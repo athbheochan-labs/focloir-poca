@@ -15,12 +15,27 @@ export class CacheService implements OnModuleInit, OnModuleDestroy {
   private readonly mem = new Map<string, MemEntry>();
 
   async onModuleInit() {
+    const client = new Redis({
+      host: 'localhost',
+      port: 6379,
+      lazyConnect: true,
+      // Don't retry — if Valkey is absent at startup we fall back to in-memory
+      // immediately rather than spamming reconnect attempts.
+      retryStrategy: () => null,
+    });
+    // Attach before connect() so any ECONNREFUSED during the probe is handled.
+    client.on('error', () => {});
+
     try {
-      const client = new Redis({ host: 'localhost', port: 6379, lazyConnect: true });
       await client.connect();
       this.redis = client;
+      // Replace the silent handler with a real one for post-startup errors.
+      this.redis.on('error', (err: Error) =>
+        this.logger.warn(`Cache: Valkey error — ${err.message}`),
+      );
       this.logger.log('Cache: connected to Valkey');
     } catch {
+      client.disconnect();
       this.logger.warn('Cache: Valkey unavailable — using in-memory fallback');
     }
   }
