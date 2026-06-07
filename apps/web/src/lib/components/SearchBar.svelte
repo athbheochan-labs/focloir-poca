@@ -38,37 +38,59 @@
   $effect(() => () => { if (debounceTimer) clearTimeout(debounceTimer); });
 </script>
 
+<!--
+  Designed to sit on a dark (--foreground) background strip.
+  Input and toggle use inverted colours so they read on dark.
+-->
 <div class="flex items-center gap-2">
-  <!-- Direction toggle -->
-  <button
-    type="button"
-    onclick={toggleDirection}
-    aria-label="Toggle search direction"
-    class={cn(
-      'flex shrink-0 items-center gap-1.5 rounded-md border border-border',
-      'bg-secondary px-3 py-2 text-sm font-medium text-secondary-foreground',
-      'transition-colors hover:bg-accent hover:text-accent-foreground',
-      'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring',
-    )}
+  <!-- Direction toggle — segmented-pill style matching the design -->
+  <div
+    class="flex shrink-0 overflow-hidden rounded-full border border-white/20 text-xs font-semibold"
+    role="group"
+    aria-label="Search direction"
   >
-    <ArrowLeftRight size={14} aria-hidden="true" />
-    {$searchDirection === 'ga-en' ? 'GA → EN' : 'EN → GA'}
-  </button>
+    <button
+      type="button"
+      onclick={() => searchDirection.set('ga-en')}
+      aria-pressed={$searchDirection === 'ga-en'}
+      class={cn(
+        'px-3 py-1.5 transition-colors focus-visible:outline-none',
+        $searchDirection === 'ga-en'
+          ? 'bg-white text-foreground'
+          : 'bg-transparent text-white/70 hover:text-white',
+      )}
+    >
+      GA
+    </button>
+    <button
+      type="button"
+      onclick={() => searchDirection.set('en-ga')}
+      aria-pressed={$searchDirection === 'en-ga'}
+      class={cn(
+        'px-3 py-1.5 transition-colors focus-visible:outline-none',
+        $searchDirection === 'en-ga'
+          ? 'bg-white text-foreground'
+          : 'bg-transparent text-white/70 hover:text-white',
+      )}
+    >
+      EN
+    </button>
+  </div>
 
-  <!-- Search input -->
+  <!-- Search input — transparent on dark strip -->
   <div class="relative flex-1">
     <input
       type="text"
       bind:value={inputValue}
       oninput={scheduleUpdate}
       onkeydown={handleKeydown}
-      placeholder={$searchDirection === 'ga-en' ? 'Cuardaigh focal Gaeilge…' : 'Search English word…'}
+      placeholder={$searchDirection === 'ga-en' ? 'Cuardaigh focal…' : 'Search word…'}
       aria-label="Search word"
       class={cn(
-        'w-full rounded-md border border-border bg-background px-3 py-2 text-sm',
-        'text-foreground placeholder:text-muted-foreground',
-        'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring',
-        inputValue && 'pr-8',
+        'w-full rounded-md bg-white/10 px-3 py-1.5 text-sm text-white',
+        'placeholder:text-white/40 caret-white',
+        'focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-white/40',
+        inputValue && 'pr-7',
       )}
     />
     {#if inputValue}
@@ -76,13 +98,9 @@
         type="button"
         onclick={clear}
         aria-label="Clear search"
-        class={cn(
-          'absolute right-2 top-1/2 -translate-y-1/2 rounded-sm p-0.5',
-          'text-muted-foreground transition-colors hover:text-foreground',
-          'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring',
-        )}
+        class="absolute right-2 top-1/2 -translate-y-1/2 rounded-sm p-0.5 text-white/50 transition-colors hover:text-white focus-visible:outline-none"
       >
-        <X size={14} aria-hidden="true" />
+        <X size={13} aria-hidden="true" />
       </button>
     {/if}
   </div>
