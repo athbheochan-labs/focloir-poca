@@ -2,7 +2,15 @@
   import SearchBar from '$lib/components/SearchBar.svelte';
   import ResultsList from '$lib/components/ResultsList.svelte';
   import DefinitionView from '$lib/components/DefinitionView.svelte';
-  import { activeEntry } from '$lib/stores/search';
+  import { searchQuery, activeEntry } from '$lib/stores/search';
+  import { performLookup, clearSearch } from '$lib/services/lookup';
+
+  // Single authoritative trigger: any change to searchQuery drives the lookup.
+  $effect(() => {
+    const word = $searchQuery.trim();
+    if (word) performLookup(word);
+    else clearSearch();
+  });
 </script>
 
 <svelte:head>
