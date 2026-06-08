@@ -1,4 +1,5 @@
 <script lang="ts">
+  import { goto } from '$app/navigation';
   import SearchBar from '$lib/components/SearchBar.svelte';
   import ResultsList from '$lib/components/ResultsList.svelte';
   import DefinitionView from '$lib/components/DefinitionView.svelte';
@@ -6,8 +7,28 @@
   import { performLookup, clearSearch } from '$lib/services/lookup';
   import { ArrowLeft } from 'lucide-svelte';
 
+  let { data } = $props();
+
   let showDetail = $state(false);
 
+  // URL → store: fires on initial load and on back/forward (load re-runs)
+  $effect(() => {
+    searchQuery.set(data.q);
+  });
+
+  // store → URL: fires when the user types; skips when already in sync
+  $effect(() => {
+    const word = $searchQuery.trim();
+    if (word !== data.q) {
+      goto(word ? `/?q=${encodeURIComponent(word)}` : '/', {
+        replaceState: false,
+        keepFocus: true,
+        noScroll: true,
+      });
+    }
+  });
+
+  // Lookup trigger: drives the proxy fetch whenever the query settles
   $effect(() => {
     const word = $searchQuery.trim();
     if (word) performLookup(word);
