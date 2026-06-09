@@ -4,7 +4,18 @@
     {
       "path": "/_app/*",
       "target": {
+        "kind": "Static",
+        "cacheControl": "public, max-age=31536000, immutable"
+      }
+    },
+    {
+      "path": "/*.*",
+      "target": {
         "kind": "Static"
+      },
+      "fallback": {
+        "kind": "Compute",
+        "src": "default"
       }
     },
     {
@@ -21,5 +32,9 @@
       "runtime": "nodejs20.x",
       "entrypoint": "index.js"
     }
-  ]
+  ],
+  "framework": {
+    "name": "sveltekit",
+    "version": "2.64.0"
+  }
 }
