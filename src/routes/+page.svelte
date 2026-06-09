@@ -3,8 +3,9 @@
   import SearchBar from '$lib/components/SearchBar.svelte';
   import ResultsList from '$lib/components/ResultsList.svelte';
   import DefinitionView from '$lib/components/DefinitionView.svelte';
-  import { searchQuery, activeEntry } from '$lib/stores/search';
+  import { searchQuery, searchDirection, activeEntry } from '$lib/stores/search';
   import { performLookup, clearSearch } from '$lib/services/lookup';
+  import { trackEvent } from '$lib/analytics';
   import { ArrowLeft } from 'lucide-svelte';
 
   let { data } = $props();
@@ -31,15 +32,20 @@
   // Lookup trigger: drives the proxy fetch whenever the query settles
   $effect(() => {
     const word = $searchQuery.trim();
-    if (word) performLookup(word);
-    else {
+    if (word) {
+      performLookup(word);
+      trackEvent('search', { word, direction: $searchDirection });
+    } else {
       clearSearch();
       showDetail = false;
     }
   });
 
   $effect(() => {
-    if ($activeEntry) showDetail = true;
+    if ($activeEntry) {
+      showDetail = true;
+      trackEvent('definition_view', { word: $activeEntry.word });
+    }
   });
 </script>
 

@@ -2,6 +2,7 @@
   import { cn } from '$lib/utils';
   import { activeEntry, searchDirection } from '$lib/stores/search';
   import type { FocloirSense } from '$lib/types';
+  import { trackEvent } from '$lib/analytics';
   import { ExternalLink } from 'lucide-svelte';
 
   type Tab = 'teanglann' | 'focloir';
@@ -66,7 +67,7 @@
           id="tab-{id}"
           aria-selected={activeTab === id}
           aria-controls="panel-{id}"
-          onclick={() => { if (available) activeTab = id; }}
+          onclick={() => { if (available) { activeTab = id; trackEvent('source_tab', { tab: id }); } }}
           class={cn(
             '-mb-px inline-block border-b-2 pb-3 pt-3 text-sm transition-colors',
             id !== 'teanglann' && 'ml-6',
@@ -144,6 +145,7 @@
                     href={cw.url}
                     target="_blank"
                     rel="noopener noreferrer"
+                    onclick={() => trackEvent('compound_click', { word: cw.word, headword: hw })}
                     class="inline-flex items-center gap-1 rounded px-2.5 py-1 text-sm bg-secondary text-secondary-foreground transition-opacity hover:opacity-75"
                   >
                     {cw.word}
