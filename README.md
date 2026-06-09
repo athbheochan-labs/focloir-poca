@@ -70,7 +70,7 @@ No Svelte or JavaScript experience is required to get started. CSS design tokens
 
 ## Sonraí · Data
 
-Word data is sourced from [teanglann.ie](https://www.teanglann.ie) and [focloir.ie](https://www.focloir.ie), both operated by Foras na Gaeilge. A formal data access request is pending. No data is redistributed or stored beyond the short-lived in-memory cache used for performance. Any derived use requires attribution to Foras na Gaeilge.
+Word data is sourced from [teanglann.ie](https://www.teanglann.ie) and [focloir.ie](https://www.focloir.ie), both operated by Foras na Gaeilge. No data is redistributed or stored beyond the short-lived in-memory cache used for performance. Any derived use requires attribution to Foras na Gaeilge.
 
 ## Ceadúnas · Licence
 
