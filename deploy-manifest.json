@@ -1,0 +1,25 @@
+{
+  "version": 1,
+  "routes": [
+    {
+      "path": "/_app/*",
+      "target": {
+        "kind": "Static"
+      }
+    },
+    {
+      "path": "/*",
+      "target": {
+        "kind": "Compute",
+        "src": "default"
+      }
+    }
+  ],
+  "computeResources": [
+    {
+      "name": "default",
+      "runtime": "nodejs20.x",
+      "entrypoint": "index.js"
+    }
+  ]
+}
