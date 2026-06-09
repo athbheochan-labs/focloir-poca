@@ -1,5 +1,5 @@
 import { writable } from 'svelte/store';
-import type { LookupResult } from '$lib/types/proxy';
+import type { LookupResult } from '$lib/types';
 
 export type SearchDirection = 'ga-en' | 'en-ga';
 export type SearchStatus = 'idle' | 'loading' | 'done' | 'empty' | 'error';

@@ -1,6 +1,6 @@
 import * as cheerio from 'cheerio';
 import type { CheerioAPI } from 'cheerio';
-import type { FocloirEntry, FocloirSense, FocloirTranslation } from '$lib/types/proxy';
+import type { FocloirEntry, FocloirSense, FocloirTranslation } from '$lib/types';
 
 const BASE_URL = 'https://www.focloir.ie';
 

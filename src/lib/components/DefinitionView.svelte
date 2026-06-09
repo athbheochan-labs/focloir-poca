@@ -1,7 +1,7 @@
 <script lang="ts">
   import { cn } from '$lib/utils';
   import { activeEntry, searchDirection } from '$lib/stores/search';
-  import type { FocloirSense } from '$lib/types/proxy';
+  import type { FocloirSense } from '$lib/types';
   import { ExternalLink } from 'lucide-svelte';
 
   type Tab = 'teanglann' | 'focloir';

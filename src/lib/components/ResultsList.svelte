@@ -1,7 +1,7 @@
 <script lang="ts">
   import { cn } from '$lib/utils';
   import { searchQuery, searchResults, searchStatus, searchError, activeEntry } from '$lib/stores/search';
-  import type { LookupResult } from '$lib/types/proxy';
+  import type { LookupResult } from '$lib/types';
 
   function firstGloss(r: LookupResult): string {
     const tDef = r.teanglann?.senses?.[0]?.definition?.trim();
