@@ -8,9 +8,13 @@
     "build": "vite build",
     "preview": "vite preview",
     "check": "svelte-kit sync && svelte-check --tsconfig ./tsconfig.json",
-    "check:watch": "svelte-kit sync && svelte-check --tsconfig ./tsconfig.json --watch"
+    "check:watch": "svelte-kit sync && svelte-check --tsconfig ./tsconfig.json --watch",
+    "build:android": "BUILD_TARGET=mobile VITE_API_BASE=https://focloir.athbheochan.irish vite build && npx cap sync android",
+    "build:ios": "BUILD_TARGET=mobile VITE_API_BASE=https://focloir.athbheochan.irish vite build && npx cap sync ios"
   },
   "devDependencies": {
+    "@capacitor/cli": "^8.4.0",
+    "@sveltejs/adapter-static": "^3.0.10",
     "@sveltejs/kit": "^2.0.0",
     "@sveltejs/vite-plugin-svelte": "^4.0.0",
     "@tailwindcss/vite": "^4.3.0",
@@ -24,6 +28,9 @@
     "vite": "^5.0.0"
   },
   "dependencies": {
+    "@capacitor/android": "^8.4.0",
+    "@capacitor/core": "^8.4.0",
+    "@capacitor/ios": "^8.4.0",
     "@sveltejs/adapter-node": "^5.5.4",
     "bits-ui": "^2.18.1",
     "cheerio": "^1.2.0",

@@ -1,0 +1,7 @@
+<?xml version='1.0' encoding='utf-8'?>
+<resources>
+    <string name="app_name">Foclóir Póca</string>
+    <string name="title_activity_main">Foclóir Póca</string>
+    <string name="package_name">ie.athbheochan.focloir</string>
+    <string name="custom_url_scheme">ie.athbheochan.focloir</string>
+</resources>
