@@ -2,7 +2,7 @@ import { json, error } from '@sveltejs/kit';
 import type { RequestHandler } from './$types';
 import { scrapeTeanglann } from '$lib/scrapers/teanglann';
 import { scrapeFocloir } from '$lib/scrapers/focloir';
-import type { LookupResult } from '$lib/types/proxy';
+import type { LookupResult } from '$lib/types';
 
 const TTL = 3_600_000; // 1 hour
 const cache = new Map<string, { value: LookupResult; expiresAt: number }>();

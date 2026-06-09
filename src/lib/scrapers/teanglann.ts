@@ -1,6 +1,6 @@
 import * as cheerio from 'cheerio';
 import type { CheerioAPI } from 'cheerio';
-import type { TeanglannEntry, Sense, Example, CompoundWord } from '$lib/types/proxy';
+import type { TeanglannEntry, Sense, Example, CompoundWord } from '$lib/types';
 
 const BASE_URL = 'https://www.teanglann.ie';
 

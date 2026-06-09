@@ -4,7 +4,7 @@ import {
   searchError,
   activeEntry,
 } from '$lib/stores/search';
-import type { LookupResult } from '$lib/types/proxy';
+import type { LookupResult } from '$lib/types';
 
 let controller: AbortController | null = null;
 
