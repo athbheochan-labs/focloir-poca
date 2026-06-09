@@ -1,0 +1,17 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="512" height="512">
+  <!-- Brand green rounded-rect background -->
+  <rect width="512" height="512" rx="96" ry="96" fill="#0F6E56"/>
+  <!-- White italic serif "f" — Crimson Pro preferred, Georgia fallback -->
+  <text
+    x="246"
+    y="400"
+    font-family="'Crimson Pro', Georgia, 'Times New Roman', serif"
+    font-size="430"
+    font-style="italic"
+    font-weight="300"
+    fill="white"
+    text-anchor="middle"
+    dominant-baseline="auto">f</text>
+  <!-- Light-teal accent dot, top-right (brand accent colour #9FE1CB) -->
+  <circle cx="396" cy="116" r="54" fill="#9FE1CB"/>
+</svg>

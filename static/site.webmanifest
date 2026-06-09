@@ -1,0 +1,27 @@
+{
+  "name": "Foclóir Póca",
+  "short_name": "Foclóir",
+  "description": "Foclóir Gaeilge-Béarla — Irish–English dictionary",
+  "start_url": "/",
+  "display": "standalone",
+  "theme_color": "#0F6E56",
+  "background_color": "#f5f3ee",
+  "icons": [
+    {
+      "src": "/favicon.png",
+      "sizes": "32x32",
+      "type": "image/png"
+    },
+    {
+      "src": "/icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ]
+}
