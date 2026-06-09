@@ -5,6 +5,7 @@ import {
   activeEntry,
 } from '$lib/stores/search';
 import type { LookupResult } from '$lib/types';
+import { API_BASE } from '$lib/api';
 
 let controller: AbortController | null = null;
 
@@ -18,7 +19,7 @@ export async function performLookup(word: string): Promise<void> {
 
   try {
     const res = await fetch(
-      `/api/lookup?q=${encodeURIComponent(word)}`,
+      `${API_BASE}/api/lookup?q=${encodeURIComponent(word)}`,
       { signal: controller.signal },
     );
 

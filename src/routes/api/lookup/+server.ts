@@ -46,5 +46,16 @@ export const GET: RequestHandler = async ({ url }) => {
   const result: LookupResult = { word, teanglann, focloir, errors };
   cacheSet(cacheKey, result);
 
-  return json(result);
+  return json(result, {
+    headers: { 'Access-Control-Allow-Origin': '*' },
+  });
 };
+
+export const OPTIONS: RequestHandler = async () =>
+  new Response(null, {
+    headers: {
+      'Access-Control-Allow-Origin': '*',
+      'Access-Control-Allow-Methods': 'GET, OPTIONS',
+      'Access-Control-Allow-Headers': 'Content-Type',
+    },
+  });

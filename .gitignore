@@ -4,3 +4,5 @@ node_modules
 .svelte-kit
 dist
 build
+# iOS platform — run `npx cap add ios` on macOS to generate
+ios/
