@@ -10,7 +10,7 @@ frontend:
         - mkdir -p .amplify-hosting/compute/default .amplify-hosting/static
         - cp -r build/* .amplify-hosting/compute/default/
         - cp package.json package-lock.json .amplify-hosting/compute/default/
-        - cd .amplify-hosting/compute/default && npm ci --omit=dev
+        - (cd .amplify-hosting/compute/default && npm ci --omit=dev)
         - cp -r .svelte-kit/output/client/. .amplify-hosting/static/
         - node -e "const fs=require('fs');fs.writeFileSync('.amplify-hosting/deploy-manifest.json',JSON.stringify({version:1,routes:[{path:'/_app/*',target:{kind:'Static'},fallback:null},{path:'/*',target:{kind:'Compute',src:'default'},fallback:null}],computeResources:[{name:'default',runtime:'nodejs20.x',entrypoint:'index.js'}],framework:{name:'sveltekit',version:'2.0.0'}},null,2))"
   artifacts:
