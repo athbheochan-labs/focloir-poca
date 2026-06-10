@@ -31,6 +31,7 @@
     "@capacitor/android": "^8.4.0",
     "@capacitor/core": "^8.4.0",
     "@capacitor/ios": "^8.4.0",
+    "@sentry/sveltekit": "^10.57.0",
     "@sveltejs/adapter-node": "^5.5.4",
     "bits-ui": "^2.18.1",
     "cheerio": "^1.2.0",

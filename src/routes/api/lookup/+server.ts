@@ -3,6 +3,7 @@ import type { RequestHandler } from './$types';
 import { scrapeTeanglann } from '$lib/scrapers/teanglann';
 import { scrapeFocloir } from '$lib/scrapers/focloir';
 import type { LookupResult } from '$lib/types';
+import { checkRateLimit } from '$lib/ratelimit';
 
 const TTL = 3_600_000; // 1 hour
 const cache = new Map<string, { value: LookupResult; expiresAt: number }>();
@@ -18,7 +19,23 @@ function cacheSet(key: string, value: LookupResult): void {
   cache.set(key, { value, expiresAt: Date.now() + TTL });
 }
 
-export const GET: RequestHandler = async ({ url }) => {
+export const GET: RequestHandler = async ({ url, request }) => {
+  const ip =
+    request.headers.get('x-forwarded-for')?.split(',')[0].trim() ??
+    request.headers.get('x-real-ip') ??
+    'unknown';
+
+  const { limited, retryAfter } = checkRateLimit(ip);
+  if (limited) {
+    return new Response('Too Many Requests', {
+      status: 429,
+      headers: {
+        'Retry-After': String(retryAfter),
+        'Access-Control-Allow-Origin': '*',
+      },
+    });
+  }
+
   const word = url.searchParams.get('q')?.trim();
   if (!word) throw error(400, 'Missing query parameter: q');
 
